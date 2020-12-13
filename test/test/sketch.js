@@ -31,8 +31,8 @@ var end_button; // button for ending the function
 let uid = gen_uid(); // unique brower/user id wird als db key benutze...
 let name = "-"; // player name
 
-let lat = -1; // wo bin ich
-let long = -1;
+let lat = 100; // wo bin ich
+let long = 200;
 var database; // db ref
 
 var dist ; // distance
@@ -41,15 +41,21 @@ var dist ; // distance
 
 
 
+function positionPing(position){
+  print("lat: " + position.latitude);
+  print("long: " + position.longitude);
+}
 
-
-
+function distance_calculate(position){
+  dist = calcGeoDistance(46.785844, -92.015965, lat, long, 'km');
+}
 
 
 
 function  distance_measure(){
-
- 
+  intervalCurrentPosition(positionPing, 5000);
+  distance_calculate();
+ distance_button.remove();
 //button to end the function
 end_button = createButton("end walk");
 //button position
@@ -58,23 +64,33 @@ end_button.position(windowWidth/2, windowHeight-windowHeight/4);
 end_button.mouseClicked(show_distance);
 
 
-//get the position every 5 sec
-  p5.prototype.intervalCurrentPosition();
 
 
-//calc the distance between two points
-  dist += p5.prototype.calcGeoDistance();
+
+
 
 
 }
 
-
 function show_distance(){
+  
+  //text ausgabe
  textSize(30);
  fill(255);
-  text('you walked ? meters', windowWidth/2 - 100, windowHeight/2);
+  print("you walked " + dist + " kilometers", windowWidth/2 - 100, windowHeight/2);
+
+  clearIntervalPos();
+
+ 
+
 end_button.remove();
 
+distance_button = createButton("start walk");
+
+//position of the button
+  distance_button.position(windowWidth/2, windowHeight-windowHeight/4);
+// when button is clicked distance measure function is called
+  distance_button.mouseClicked(distance_measure);
 
 }
 
