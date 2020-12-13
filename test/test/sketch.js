@@ -72,7 +72,7 @@ end_button.mouseClicked(show_distance);
 function show_distance(){
  textSize(30);
  fill(255);
-  text('you walked meter', windowWidth/2 - 100, windowHeight/2);
+  text('you walked ? meters', windowWidth/2 - 100, windowHeight/2);
 end_button.remove();
 
 
@@ -83,7 +83,7 @@ end_button.remove();
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-
+  
   
 
 
@@ -95,7 +95,7 @@ function setup() {
 // when button is clicked distance measure function is called
   distance_button.mouseClicked(distance_measure);
 
-
+ 
 
 
 
@@ -109,7 +109,7 @@ function draw () {
 
 background(0);
 
-distance_button.draw();
+
 
 
 }
