@@ -81,7 +81,7 @@ end_button.mouseClicked(show_distance);
 }
 
 function show_distance(){
-  background(100);
+  background(0);
   //text ausgabe
  textSize(30);
  fill(255);
@@ -107,7 +107,7 @@ distance_button = createButton("start walk");
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  background(100);
+  background(0);
 
 
 //create the button
