@@ -71,8 +71,8 @@ end_button.mouseClicked(show_distance);
 
 function show_distance(){
  textSize(30);
+ fill(255);
   text('you walked meter', windowWidth/2 - 100, windowHeight/2);
-  fill(255);
 end_button.remove();
 
 
