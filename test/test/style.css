@@ -6,3 +6,15 @@ html, body {
 canvas {
   display: block;
 }
+
+div {
+  display:inline-block;
+  width: 33%;
+}
+
+@media(max-device-width: 480px){
+  div {
+    display:block;
+    width: 100%;
+  }
+}

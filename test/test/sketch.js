@@ -48,11 +48,12 @@ function positionPing(position){
 
 //Abstand zu Startpunkt und aktueller Position wird berechnet
 function distance_calculate(){
-  dist += calcGeoDistance(lat2, long2, lat, long, 'km');
+  dist += calcGeoDistance(lat, long, lat2, long2, 'km');
 }
 
 //Distanz wird alle 5 Sekunden berechnet, End Button wird bereit gestellt
 function  distance_measure(){
+  dist = 0;
   intervalCurrentPosition(positionPing, 5000);
  distance_button.remove();
 //End Button wird erzeugt
