@@ -44,6 +44,7 @@ function positionPing(position){
   long2 = position.longitude;
   distance_calculate();
   print(dist);
+  round();
 }
 
 //Abstand zu Startpunkt und aktueller Position wird berechnet
@@ -70,7 +71,7 @@ function show_distance(){
   //text ausgabe
  textSize(30);
  fill(255);
-  text("you walked " + dist + " kilometers", windowWidth/2 - 100, windowHeight/2);
+  text("you walked " + dist + " kilometers", windowWidth/2 -150, windowHeight/2);
 
   clearIntervalPos();
 
@@ -87,7 +88,11 @@ distance_button = createButton("start walk");
 
 }
 
+let n = 100;
 
+function round(dist, n) {
+  dist = (Math.round(dist * n) / n);
+  }
 
 
 function setup() {
