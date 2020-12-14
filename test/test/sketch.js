@@ -6,10 +6,6 @@ let myMap;
 let canvas;
 let myFont;
 
-
-
-
-
 //Options for map
 const options = {
   lat: 53.0793, // center in bremen
@@ -19,33 +15,28 @@ const options = {
    pitch: 0,
 };
 
-
-
-
-
-
-
-var distance_button; // button for the function
-var end_button; // button for ending the function
+//Attribute
+var distance_button; // Button fürs starten der Funktion
+var end_button; // Button für beenden der Funktion
 let uid = gen_uid(); // unique brower/user id wird als db key benutze...
-let name = "-"; // player name
+let name = "-"; // Spielername
 
-let lat = 0; // wo bin ich
-let long = 0;
-let lat2 = 0; //aktuelle position
-let long2 = 0;
+let lat = 0; // Latitude von 1. Spielerposition
+let long = 0; // Longitude von 1. Spielerposition
+let lat2 = 0; // Latitude von 2. Spielerposition
+let long2 = 0; // Longitude von 2. Spielerposition
 var database; // db ref
 
-let dist = 0.0 ; // distance
-var text; //text
+let dist = 0.0 ; // Distanzvariable
 
+//Startposition wird gespeichert
 navigator.geolocation.getCurrentPosition(position => {
   lat = (position.coords.latitude); 
   long = (position.coords.longitude);
-});
+}
+);
 
-
-
+//Aktuelle Position wird ermittelt & gespeichert
 function positionPing(position){
   print("lat: " + position.latitude);
   print("long: " + position.longitude);
@@ -55,31 +46,24 @@ function positionPing(position){
   print(dist);
 }
 
+//Abstand zu Startpunkt und aktueller Position wird berechnet
 function distance_calculate(){
   dist += calcGeoDistance(lat2, long2, lat, long, 'km');
 }
 
-
-
+//Distanz wird alle 5 Sekunden berechnet, End Button wird bereit gestellt
 function  distance_measure(){
   intervalCurrentPosition(positionPing, 5000);
  distance_button.remove();
-//button to end the function
+//End Button wird erzeugt
 end_button = createButton("end walk");
-//button position
+//End Button wird platziert
 end_button.position(windowWidth/2, windowHeight-windowHeight/4);
-//method if button is pressed
+//Methode die ausgeführt wird, wenn der End Button gedrückt wird
 end_button.mouseClicked(show_distance);
-
-
-
-
-
-
-
-
 }
 
+//Gibt Distanz zurück in Textform
 function show_distance(){
   background(0);
   //text ausgabe
