@@ -43,18 +43,24 @@ function positionPing(position){
   print("long: " + position.longitude);
   lat2 = position.latitude;
   long2 = position.longitude;
-  distance_calculate();
+  dist += calcGeoDistance(lat, long, lat2, long2, 'km');
   print(dist);
-  round();
+  round(dist);
 }
 
 //Abstand zu Startpunkt und aktueller Position wird berechnet
 function distance_calculate(){
-  dist += calcGeoDistance(lat, long, lat2, long2, 'km');
+  
 }
 
 //Distanz wird alle 5 Sekunden berechnet, End Button wird bereit gestellt
 function  distance_measure(){
+  loadImage('black.png', img2 => {
+    image(img2, 0, 0, windowWidth, 100);
+    });
+  loadImage('black.png', img3 => {
+    image(img3, 0, windowHeight/2+370, windowWidth, 100);
+    });
   dist = 0;
   intervalCurrentPosition(positionPing, 5000);
  distance_button.remove();
@@ -68,7 +74,13 @@ end_button.mouseClicked(show_distance);
 
 //Gibt Distanz zurück in Textform
 function show_distance(){
-  background(0);
+  background(90);
+  loadImage('black.png', img2 => {
+    image(img2, 0, 0, windowWidth, 100);
+    });
+  loadImage('black.png', img3 => {
+    image(img3, 0, windowHeight/2+370, windowWidth, 100);
+    });
   //text ausgabe
  textSize(30);
  fill(255);
@@ -96,10 +108,16 @@ function round(dist, n) {
 }
 
 let listimg;
+let buttonlist;
+let buttonsound;
+let buttonclothes;
+let buttonfood;
+let buttonwalk;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background(90);
+  
   loadImage('black.png', img2 => {
     image(img2, 0, 0, windowWidth, 100);
     });
@@ -109,22 +127,27 @@ function setup() {
   loadImage('pet.png', img => {
   image(img, windowWidth/2.7, 100, 443, 745);
   });
-  loadImage('list.png', listimg => {
-    image(listimg, windowWidth/3, 0, 120, 120);
-    });
-  buttonlist = new Button(windowWidth/3, 0, 120, 120, listimg);
-  loadImage('sound.png', img => {
-    image(img, windowWidth/1.7, 0, 120, 120);
-    });
-  loadImage('clothes.png', img => {
-    image(img, windowWidth/1.7, windowHeight/2+360, 120, 120);
-    });
-  loadImage('food.png', img => {
-    image(img, windowWidth/2.17, windowHeight/2+360, 120, 120);
-    });
-  loadImage('walk.png', img => {
-    image(img, windowWidth/3, windowHeight/2+360, 120, 120);
-    });
+
+  buttonlist = createImg('list.png');
+  buttonlist.position(windowWidth/3, 0, 120, 120);
+  buttonlist.size(115, 115);
+  
+  buttonsound = createImg("sound.png");
+  buttonsound.position(windowWidth/1.7, 0, 120);
+  buttonsound.size(115, 115);
+
+  buttonclothes = createImg("clothes.png");
+  buttonclothes.position(windowWidth/1.7, windowHeight/2+365, 120, 120);
+  buttonclothes.size(100, 100);
+
+  buttonfood = createImg("food.png");
+  buttonfood.position(windowWidth/2.17, windowHeight/2+365, 120, 120);
+  buttonfood.size(100, 100);
+
+  buttonwalk = createImg("walk.png");
+  buttonwalk.position(windowWidth/3, windowHeight/2+365, 120, 120);
+  buttonwalk.size(100, 100);
+  buttonwalk.mouseClicked(walk);
   /*if (egg == false){
     textSize(30);
  fill(255);
@@ -132,7 +155,30 @@ function setup() {
   <input type="text" size="40" name="User"></input>
   }*/
  
-/*
+
+
+
+  
+}
+
+function walk(){
+  background(90);
+  loadImage('black.png', img2 => {
+    image(img2, 0, 0, windowWidth, 100);
+    });
+  loadImage('black.png', img3 => {
+    image(img3, 0, windowHeight/2+370, windowWidth, 100);
+    });
+  buttonlist.remove();
+  buttonsound.remove();
+  buttonclothes.remove();
+  buttonfood.remove();
+  buttonwalk.remove();
+
+  goBack = createImg("walk.png");
+  goBack.position(windowWidth/3, windowHeight/2+365, 120, 120);
+  goBack.size(100, 100);
+  goBack.mouseClicked(goingBack);
 //create the button
   distance_button = createButton("start walk");
 
@@ -140,14 +186,15 @@ function setup() {
   distance_button.position(windowWidth/2, windowHeight-windowHeight/4);
 // when button is clicked distance measure function is called
   distance_button.mouseClicked(distance_measure);
-*/
-
-
-
-  
 }
 
-class Button {
+function goingBack(){
+  distance_button.remove();
+  end_button.remove();
+  goBack.remove();
+  setup();
+}
+/*class Button {
   
   constructor(inX, inY, inImg) {
     this.x = inX;
@@ -178,6 +225,7 @@ class Button {
     }
   }
 }
+*/
 
 function gen_uid() {
   /*
