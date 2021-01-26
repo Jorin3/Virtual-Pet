@@ -12,7 +12,7 @@ const options = {
   lng: 8.8017,
   zoom: 6,
   style: 'mapbox://styles/mapbox/dark-v9',
-   pitch: 0,
+  pitch: 0,
 };
 
 //Attribute
@@ -26,173 +26,561 @@ let long = 0; // Longitude von 1. Spielerposition
 let lat2 = 0; // Latitude von 2. Spielerposition
 let long2 = 0; // Longitude von 2. Spielerposition
 var database; // db ref
-let egg = true;
-
-let dist = 0.0 ; // Distanzvariable
+let beginning = false;
+let end = false;
+let hunger = 50;
+var petName = '';
+let dist = 0.0; // Distanzvariable
+let music = true;
 
 //Startposition wird gespeichert
 navigator.geolocation.getCurrentPosition(position => {
-  lat = (position.coords.latitude); 
+  lat = (position.coords.latitude);
   long = (position.coords.longitude);
 }
 );
 
+function startPosition(position) {
+  lat = position.latitude;
+  long = position.longitude;
+}
+
 //Aktuelle Position wird ermittelt & gespeichert
-function positionPing(position){
+function positionPing(position) {
+  print(lat);
+  print(long);
   print("lat: " + position.latitude);
   print("long: " + position.longitude);
   lat2 = position.latitude;
   long2 = position.longitude;
   dist += calcGeoDistance(lat, long, lat2, long2, 'km');
   print(dist);
-  round(dist);
 }
 
-//Abstand zu Startpunkt und aktueller Position wird berechnet
-function distance_calculate(){
-  
-}
 
 //Distanz wird alle 5 Sekunden berechnet, End Button wird bereit gestellt
-function  distance_measure(){
+function distance_measure() {
+  startPosition();
   loadImage('black.png', img2 => {
     image(img2, 0, 0, windowWidth, 100);
-    });
+  });
   loadImage('black.png', img3 => {
-    image(img3, 0, windowHeight/2+370, windowWidth, 100);
-    });
+    image(img3, 0, windowHeight / 2 + 370, windowWidth, 100);
+  });
   dist = 0;
   intervalCurrentPosition(positionPing, 5000);
- distance_button.remove();
-//End Button wird erzeugt
-end_button = createButton("end walk");
-//End Button wird platziert
-end_button.position(windowWidth/2, windowHeight-windowHeight/4);
-//Methode die ausgeführt wird, wenn der End Button gedrückt wird
-end_button.mouseClicked(show_distance);
+  end = true;
+  distance_button.remove();
+  //End Button wird erzeugt
+  end_button = createButton("end walk");
+  //End Button wird platziert
+  end_button.position(windowWidth / 2, windowHeight - windowHeight / 4);
+  //Methode die ausgeführt wird, wenn der End Button gedrückt wird
+  end_button.mouseClicked(show_distance);
 }
 
 //Gibt Distanz zurück in Textform
-function show_distance(){
+function show_distance() {
   background(90);
   loadImage('black.png', img2 => {
     image(img2, 0, 0, windowWidth, 100);
-    });
+  });
   loadImage('black.png', img3 => {
-    image(img3, 0, windowHeight/2+370, windowWidth, 100);
-    });
+    image(img3, 0, windowHeight / 2 + 370, windowWidth, 100);
+  });
+  roundThis();
   //text ausgabe
- textSize(30);
- fill(255);
-  text("you walked " + dist + " kilometers", windowWidth/2 -150, windowHeight/2);
+  textSize(30);
+  fill(255);
+  text("you walked " + rounded + " kilometers", windowWidth / 2 - 150, windowHeight / 2);
 
   clearIntervalPos();
 
- 
 
-end_button.remove();
 
-distance_button = createButton("start walk");
+  end_button.remove();
 
-//position of the button
-  distance_button.position(windowWidth/2, windowHeight-windowHeight/4);
-// when button is clicked distance measure function is called
+  distance_button = createButton("start walk");
+
+  //position of the button
+  distance_button.position(windowWidth / 2, windowHeight - windowHeight / 4);
+  // when button is clicked distance measure function is called
   distance_button.mouseClicked(distance_measure);
 
 }
 
-let n = 100;
+let rounded = 0;
 
-function round(dist, n) {
-  dist = (Math.round(dist * n) / n);
+function roundThis() {
+  rounded = round(dist, 2);
 }
 
+let res = false;
 let listimg;
 let buttonlist;
-let buttonsound;
+let soundOn;
+let soundOff
 let buttonclothes;
 let buttonfood;
 let buttonwalk;
+let inp;
+let freshStart = false;
+let acc = false;
+let fur = false;
+let eyes = false;
+let cloth = false;
+let purpleGreen = true;
+let blueGreen = false;
+let purpleRed = false;
+let blueRed = false;
+let purpleFur = true;
+let blueFur = false;
+let greenEyes = true;
+let redEyes = false;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background(90);
+
   
+
   loadImage('black.png', img2 => {
     image(img2, 0, 0, windowWidth, 100);
-    });
+  });
   loadImage('black.png', img3 => {
-    image(img3, 0, windowHeight/2+370, windowWidth, 100);
-    });
-  loadImage('pet.png', img => {
-  image(img, windowWidth/2.7, 100, 443, 745);
+    image(img3, 0, windowHeight / 2 + 370, windowWidth, 100);
   });
 
-  buttonlist = createImg('list.png');
-  buttonlist.position(windowWidth/3, 0, 120, 120);
-  buttonlist.size(115, 115);
-  
-  buttonsound = createImg("sound.png");
-  buttonsound.position(windowWidth/1.7, 0, 120);
-  buttonsound.size(115, 115);
-
-  buttonclothes = createImg("clothes.png");
-  buttonclothes.position(windowWidth/1.7, windowHeight/2+365, 120, 120);
-  buttonclothes.size(100, 100);
-
-  buttonfood = createImg("food.png");
-  buttonfood.position(windowWidth/2.17, windowHeight/2+365, 120, 120);
-  buttonfood.size(100, 100);
-
-  buttonwalk = createImg("walk.png");
-  buttonwalk.position(windowWidth/3, windowHeight/2+365, 120, 120);
-  buttonwalk.size(100, 100);
-  buttonwalk.mouseClicked(walk);
-  /*if (egg == false){
-    textSize(30);
- fill(255);
-  text("Name your pet!", windowWidth/2 -150, windowHeight/3);
-  <input type="text" size="40" name="User"></input>
-  }*/
- 
-
-
+  if (beginning == false){
+    egg();
+  }
 
   
 }
 
-function walk(){
+function main() {
   background(90);
   loadImage('black.png', img2 => {
     image(img2, 0, 0, windowWidth, 100);
-    });
+  });
   loadImage('black.png', img3 => {
-    image(img3, 0, windowHeight/2+370, windowWidth, 100);
-    });
+    image(img3, 0, windowHeight / 2 + 370, windowWidth, 100);
+  });
+  
+  if (acc == true) {
+    furColor.remove();
+    eyeColor.remove();
+    accessoires.remove();
+    backFromClothes.remove();
+  }
+  if (fur == true) {
+    furOption1.remove();
+    furOption2.remove(); 
+  }
+  if (eyes == true) {
+    eyesOption1.remove();
+    eyesOption2.remove();
+  }
+  if (cloth == true) {
+    clothOption1.remove();
+    clothOption2.remove();
+  }
+  yesButton.remove();
+  noButton.remove();
+  
+  if (purpleGreen == true) {
+    if (hunger > 30 && hunger < 70) {
+      loadImage('pet.png', img => {
+        image(img, windowWidth / 2.7, 140, 413, 705);
+      });
+    }
+    if (hunger > 60) {
+      loadImage('pet_purple_green_chubby.png', img => {
+        image(img, windowWidth / 2.7, 140, 413, 705);
+      });
+    }
+  }
+  if (purpleRed == true) {
+    if (hunger > 30 && hunger < 70) {
+      loadImage('pet_purple_red.png', img => {
+        image(img, windowWidth / 2.7, 140, 413, 705);
+      });
+    }
+    if (hunger > 60) {
+      loadImage('pet_purple_red_chubby.png', img => {
+        image(img, windowWidth / 2.7, 140, 413, 705);
+      });
+    }
+  }
+  if (blueGreen == true) {
+    if (hunger > 30 && hunger < 70) {
+      loadImage('pet_blue_green.png', img => {
+        image(img, windowWidth / 2.7, 140, 413, 705);
+      });
+    }
+    if (hunger > 60) {
+      loadImage('pet_blue_green_chubby.png', img => {
+        image(img, windowWidth / 2.7, 140, 413, 705);
+      });
+    }
+  }
+  if (blueRed == true) {
+    if (hunger > 30 && hunger < 70) {
+      loadImage('pet_blue_red.png', img => {
+        image(img, windowWidth / 2.7, 140, 413, 705);
+      });
+    }
+    if (hunger > 60) {
+      loadImage('pet_blue_red_chubby.png', img => {
+        image(img, windowWidth / 2.7, 140, 413, 705);
+      });
+    }
+  }
+
+  buttonlist = createImg('list.png');
+  buttonlist.position(windowWidth / 3, 0, 120, 120);
+  buttonlist.size(115, 115);
+
+  if (music == true) {
+    soundOn = createImg("sound.png");
+    soundOn.position(windowWidth / 1.7, 0, 120);
+    soundOn.size(115, 115);
+    soundOn.mouseClicked(soundToggleOff);
+  }
+  if (music == false) {
+    soundOff = createImg("soundOff.png");
+    soundOff.position(windowWidth / 1.7, 0, 120);
+    soundOff.size(115, 115);
+    soundOff.mouseClicked(soundToggleOn);
+  }
+  
+
+  buttonclothes = createImg("clothes.png");
+  buttonclothes.position(windowWidth / 1.7, windowHeight / 2 + 365, 120, 120);
+  buttonclothes.size(100, 100);
+  buttonclothes.mouseClicked(clothes);
+
+  buttonfood = createImg("food.png");
+  buttonfood.position(windowWidth / 2.17, windowHeight / 2 + 365, 120, 120);
+  buttonfood.size(100, 100);
+  buttonfood.mouseClicked(feed);
+
+  buttonwalk = createImg("walk.png");
+  buttonwalk.position(windowWidth / 3, windowHeight / 2 + 365, 120, 120);
+  buttonwalk.size(100, 100);
+  buttonwalk.mouseClicked(walk);
+
+  textSize(30);
+  fill(255);
+  text(petName, windowWidth / 2.17, 135);
+}
+
+function explosion() {
+  background(0);
   buttonlist.remove();
-  buttonsound.remove();
+  if (music == true) {
+    soundOn.remove();
+  }
+  if (music == false) {
+    soundOff.remove();
+  }
+  buttonclothes.remove();
+  buttonfood.remove();
+  buttonwalk.remove();
+  loadImage('pet.png', img => {
+    image(img, windowWidth / 2.7, 100, 443, 745);
+  });
+  ohButton = createButton("Oh.");
+  ohButton.position(windowWidth / 2.17, windowHeight / 2 + 365);
+  ohButton.mouseClicked(gameOver);
+}
+
+function clothes() {
+  acc = true;
+  buttonclothes.remove();
+  buttonlist.remove();
+  if (music == true) {
+    soundOn.remove();
+  }
+  if (music == false) {
+    soundOff.remove();
+  }
+  buttonfood.remove();
+  buttonwalk.remove();
+  backFromClothes = createImg("clothes.png");
+  backFromClothes.position(windowWidth / 1.7, windowHeight / 2 + 365, 120, 120);
+  backFromClothes.size(100, 100);
+  backFromClothes.mouseClicked(main);
+  furColor = createButton("Fur");
+  furColor.position(windowWidth / 3, windowHeight / 2 + 305);
+  furColor.mouseClicked(furMenu);
+  eyeColor = createButton("Eyes");
+  eyeColor.position(windowWidth / 2.17, windowHeight / 2 + 305);
+  eyeColor.mouseClicked(eyesMenu);
+  accessoires = createButton("Clothes");
+  accessoires.position(windowWidth / 1.7, windowHeight / 2 + 305);
+  accessoires.mouseClicked(clothesMenu);
+}
+
+function furMenu() {
+  fur = true;
+  furColor.remove();
+  eyeColor.remove();
+  accessoires.remove();
+  furOption1 = createImg("purple.png");
+  furOption1.position(windowWidth / 3, windowHeight / 2 + 305);
+  furOption1.size(50, 50);
+  furOption1.mouseClicked(furPurple);
+  furOption2 = createImg("blue.png");
+  furOption2.position(windowWidth / 1.7, windowHeight / 2 +305);
+  furOption2.size(50, 50);
+  furOption2.mouseClicked(furBlue);
+}
+
+function furPurple() {
+  if (greenEyes == true) {
+    purpleFur = true;
+    blueFur = false;
+    purpleGreen = true;
+    purpleRed = false;
+    blueGreen = false;
+    blueRed = false;
+  }
+  if (redEyes == true) {
+    purpleFur = true;
+    blueFur = false;
+    purpleRed = true;
+    purpleGreen = false;
+    blueGreen = false;
+    blueRed = false;
+  }
+  main();
+}
+
+function furBlue() {
+  if (greenEyes == true) {
+    purpleFur = false;
+    blueFur = true;
+    purpleGreen = false;
+    purpleRed = false;
+    blueGreen = true;
+    blueRed = false;
+  }
+  if (redEyes == true) {
+    purpleFur = false;
+    blueFur = true;
+    purpleRed = false;
+    purpleGreen = false;
+    blueGreen = false;
+    blueRed = true;
+  }
+  main();
+}
+
+function eyesMenu() {
+  eyes = true;
+  furColor.remove();
+  eyeColor.remove();
+  accessoires.remove();
+  eyesOption1 = createImg("green.png");
+  eyesOption1.position(windowWidth / 3, windowHeight / 2 + 305);
+  eyesOption1.size(50, 50);
+  eyesOption1.mouseClicked(eyesGreen);
+  eyesOption2 = createImg("red.png");
+  eyesOption2.position(windowWidth / 1.7, windowHeight / 2 +305);
+  eyesOption2.size(50, 50);
+  eyesOption2.mouseClicked(eyesRed);
+}
+function eyesGreen() {
+  if (purpleFur == true) {
+    greenEyes = true;
+    redEyes = false;
+    purpleGreen = true;
+    purpleRed = false;
+    blueGreen = false;
+    blueRed = false;
+  }
+  if (blueFur == true) {
+    greenEyes = true;
+    redEyes = false;
+    purpleRed = false;
+    purpleGreen = false;
+    blueGreen = true;
+    blueRed = false;
+  }
+  main();
+}
+function eyesRed() {
+  if (purpleFur == true) {
+    greenEyes = false;
+    redEyes = true;
+    purpleGreen = false;
+    purpleRed = true;
+    blueGreen = false;
+    blueRed = false;
+  }
+  if (blueFur == true) {
+    greenEyes = false;
+    redEyes = true;
+    purpleRed = false;
+    purpleGreen = false;
+    blueGreen = false;
+    blueRed = true;
+  }
+  main();
+}
+
+function soundToggleOff() {
+  soundOn.remove();
+  music = false;
+  console.log("soundOff");
+  buttonlist.remove();
+  buttonfood.remove();
+  buttonclothes.remove();
+  buttonwalk.remove();
+  main();
+}
+function soundToggleOn() {
+  soundOff.remove();
+  music = true;
+  console.log("soundOn");
+  buttonlist.remove();
+  buttonfood.remove();
+  buttonclothes.remove();
+  buttonwalk.remove();
+  main();
+}
+
+function clothesMenu() {
+  cloth = true;
+  furColor.remove();
+  eyeColor.remove();
+  accessoires.remove();
+  clothOption1 = createButton("Option 1");
+  clothOption1.position(windowWidth / 3, windowHeight / 2 + 305);
+  clothOption2 = createButton ("Option 2");
+  clothOption2.position(windowWidth / 1.7, windowHeight / 2 +305);
+}
+
+function feed() {
+  buttonclothes.remove();
+  buttonlist.remove();
+  if (music == true) {
+    soundOn.remove();
+  }
+  if (music == false) {
+    soundOff.remove();
+  }
+  buttonfood.remove();
+  buttonwalk.remove();
+  if (hunger == 100) {
+    explosion();
+  }
+  hunger += 10;
+  console.log(hunger);
+  main();
+}
+
+function gameOver() {
+  ohButton.remove();
+  background(0);
+  textSize(30);
+  fill(255);
+  text("Game Over", windowWidth / 2 - 150, windowHeight / 2);
+  restart = createButton("Restart");
+  restart.position(windowWidth / 2 - 150, windowHeight / 2 + 100);
+  res = true;
+  restart.mouseClicked(egg);
+}
+
+function egg() {
+  if (freshStart == true) {
+    yesButton.remove();
+    noButton.remove();
+  }
+  background(90);
+  loadImage('black.png', img2 => {
+    image(img2, 0, 0, windowWidth, 100);
+  });
+  loadImage('black.png', img3 => {
+    image(img3, 0, windowHeight / 2 + 370, windowWidth, 100);
+  });
+  if (res == true) {
+  restart.remove();
+  }
+  beginning = true;
+  textSize(30);
+ fill(255);
+  text("Name your pet!", windowWidth/2 -150, windowHeight/3);
+  inp = createInput('');
+  inp.position(windowWidth/2 -150, windowHeight/3 + 50);
+  nameThePet = createButton("Name it!");
+  nameThePet.position(windowWidth/2 -150, windowHeight/3 + 100);
+  nameThePet.mouseClicked(areYouSure);
+}
+
+function areYouSure() {
+  freshStart = true;
+  nameThePet.remove();
+  inp.remove();
+  petName = inp.value();
+  background(90);
+  loadImage('black.png', img2 => {
+    image(img2, 0, 0, windowWidth, 100);
+  });
+  loadImage('black.png', img3 => {
+    image(img3, 0, windowHeight / 2 + 370, windowWidth, 100);
+  });
+textSize(30);
+ fill(255);
+  text("Is this its name?: " + petName, windowWidth/2 -150, windowHeight/3);
+  yesButton = createButton("Yes");
+  yesButton.position(windowWidth/2 -150, windowHeight/3 + 50)
+  yesButton.mouseClicked(main);
+  noButton = createButton("No");
+  noButton.position(windowWidth/2 -100, windowHeight/3 + 50)
+  noButton.mouseClicked(egg);
+}
+
+function walk() {
+  background(90);
+  loadImage('black.png', img2 => {
+    image(img2, 0, 0, windowWidth, 100);
+  });
+  loadImage('black.png', img3 => {
+    image(img3, 0, windowHeight / 2 + 370, windowWidth, 100);
+  });
+  buttonlist.remove();
+  if (music == true) {
+    soundOn.remove();
+  }
+  if (music == false) {
+    soundOff.remove();
+  }
   buttonclothes.remove();
   buttonfood.remove();
   buttonwalk.remove();
 
   goBack = createImg("walk.png");
-  goBack.position(windowWidth/3, windowHeight/2+365, 120, 120);
+  goBack.position(windowWidth / 3, windowHeight / 2 + 365, 120, 120);
   goBack.size(100, 100);
   goBack.mouseClicked(goingBack);
-//create the button
+  //create the button
   distance_button = createButton("start walk");
 
-//position of the button
-  distance_button.position(windowWidth/2, windowHeight-windowHeight/4);
-// when button is clicked distance measure function is called
+  //position of the button
+  distance_button.position(windowWidth / 2, windowHeight - windowHeight / 4);
+  // when button is clicked distance measure function is called
   distance_button.mouseClicked(distance_measure);
 }
 
-function goingBack(){
+function goingBack() {
   distance_button.remove();
-  end_button.remove();
+  if (end == true) {
+    end_button.remove();
+  }
   goBack.remove();
-  setup();
+  main();
 }
 /*class Button {
   
