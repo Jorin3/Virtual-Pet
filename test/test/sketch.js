@@ -23,6 +23,8 @@ let name = "-"; // Spielername
 
 let lat = 0; // Latitude von 1. Spielerposition
 let long = 0; // Longitude von 1. Spielerposition
+let latStart = 0; // Latitude von 1. Spielerposition
+let longStart = 0; // Longitude von 1. Spielerposition
 let lat2 = 0; // Latitude von 2. Spielerposition
 let long2 = 0; // Longitude von 2. Spielerposition
 var database; // db ref
@@ -32,6 +34,7 @@ let hunger = 50;
 var petName = '';
 let dist = 0.0; // Distanzvariable
 let music = true;
+let walkstarted = true;
 
 //Startposition wird gespeichert
 navigator.geolocation.getCurrentPosition(position => {
@@ -41,26 +44,30 @@ navigator.geolocation.getCurrentPosition(position => {
 );
 
 function startPosition(position) {
-  lat = position.latitude;
-  long = position.longitude;
+  
 }
 
 //Aktuelle Position wird ermittelt & gespeichert
 function positionPing(position) {
-  print(lat);
-  print(long);
+  if (walkStarted == true) {
+    latStart = position.latitude;
+    longStart = position.longitude;
+  }
+  walkstarted = false;
+  print(latStart);
+  print(longStart);
   print("lat: " + position.latitude);
   print("long: " + position.longitude);
   lat2 = position.latitude;
   long2 = position.longitude;
-  dist += calcGeoDistance(lat, long, lat2, long2, 'km');
+  dist += calcGeoDistance(latStart, longStart, lat2, long2, 'km');
   print(dist);
 }
 
 
 //Distanz wird alle 5 Sekunden berechnet, End Button wird bereit gestellt
 function distance_measure() {
-  startPosition();
+  walkStarted = true;
   loadImage('black.png', img2 => {
     image(img2, 0, 0, windowWidth, 100);
   });
