@@ -35,6 +35,7 @@ var petName = '';
 let dist = 0.0; // Distanzvariable
 let music = true;
 let walkstarted = true;
+var gif_pet;
 
 //Startposition wird gespeichert
 navigator.geolocation.getCurrentPosition(position => {
@@ -42,10 +43,6 @@ navigator.geolocation.getCurrentPosition(position => {
   long = (position.coords.longitude);
 }
 );
-
-function startPosition(position) {
-  
-}
 
 //Aktuelle Position wird ermittelt & gespeichert
 function positionPing(position) {
@@ -197,84 +194,84 @@ function main() {
   
   if (purpleGreen == true) {
     if (hunger > 30 && hunger < 70) {
-      loadImage('pet.png', img => {
-        image(img, windowWidth / 2.7, 140, 413, 705);
-      });
+      gif_pet = createImg('idle_purple_green.gif');
+      gif_pet.position(windowWidth / 2.7, 140);
+      gif_pet.size(413, 705);
     }
     if (hunger > 60) {
-      loadImage('pet_purple_green_chubby.png', img => {
-        image(img, windowWidth / 2.7, 140, 413, 705);
-      });
+      gif_pet = createImg('pet_purple_green_chubby.png');
+      gif_pet.position(windowWidth / 2.7, 140);
+      gif_pet.size(413, 705);
     }
   }
   if (purpleRed == true) {
     if (hunger > 30 && hunger < 70) {
-      loadImage('pet_purple_red.png', img => {
-        image(img, windowWidth / 2.7, 140, 413, 705);
-      });
+      gif_pet = createImg('idle_purple_red.gif');
+      gif_pet.position(windowWidth / 2.7, 140);
+      gif_pet.size(413, 705);
     }
     if (hunger > 60) {
-      loadImage('pet_purple_red_chubby.png', img => {
-        image(img, windowWidth / 2.7, 140, 413, 705);
-      });
+      gif_pet = createImg('pet_purple_red_chubby.png');
+      gif_pet.position(windowWidth / 2.7, 140);
+      gif_pet.size(413, 705);
     }
   }
   if (blueGreen == true) {
     if (hunger > 30 && hunger < 70) {
-      loadImage('pet_blue_green.png', img => {
-        image(img, windowWidth / 2.7, 140, 413, 705);
-      });
+      gif_pet = createImg('idle_blue_green.gif');
+      gif_pet.position(windowWidth / 2.7, 140);
+      gif_pet.size(413, 705);
     }
     if (hunger > 60) {
-      loadImage('pet_blue_green_chubby.png', img => {
-        image(img, windowWidth / 2.7, 140, 413, 705);
-      });
+      gif_pet = createImg('pet_blue_green_chubby.png');
+      gif_pet.position(windowWidth / 2.7, 140);
+      gif_pet.size(413, 705);
     }
   }
   if (blueRed == true) {
     if (hunger > 30 && hunger < 70) {
-      loadImage('pet_blue_red.png', img => {
-        image(img, windowWidth / 2.7, 140, 413, 705);
-      });
+      gif_pet = createImg('idle_blue_red.gif');
+      gif_pet.position(windowWidth / 2.7, 140);
+      gif_pet.size(413, 705);
     }
     if (hunger > 60) {
-      loadImage('pet_blue_red_chubby.png', img => {
-        image(img, windowWidth / 2.7, 140, 413, 705);
-      });
+      gif_pet = createImg('pet_blue_red_chubby.png');
+      gif_pet.position(windowWidth / 2.7, 140);
+      gif_pet.size(413, 705);
     }
   }
 
   buttonlist = createImg('list.png');
   buttonlist.position(windowWidth / 3, 0, 120, 120);
-  buttonlist.size(115, 115);
+  buttonlist.size(100, 100);
 
   if (music == true) {
     soundOn = createImg("sound.png");
     soundOn.position(windowWidth / 1.7, 0, 120);
-    soundOn.size(115, 115);
+    soundOn.size(100, 100);
     soundOn.mouseClicked(soundToggleOff);
   }
   if (music == false) {
     soundOff = createImg("soundOff.png");
     soundOff.position(windowWidth / 1.7, 0, 120);
-    soundOff.size(115, 115);
+    soundOff.size(100, 100);
     soundOff.mouseClicked(soundToggleOn);
   }
   
 
   buttonclothes = createImg("clothes.png");
-  buttonclothes.position(windowWidth / 1.7, windowHeight / 2 + 365, 120, 120);
-  buttonclothes.size(100, 100);
+  buttonclothes.position(windowWidth / 1.7, windowHeight / 2 + 375, 120, 120);
+  buttonclothes.size(90, 90);
   buttonclothes.mouseClicked(clothes);
 
   buttonfood = createImg("food.png");
-  buttonfood.position(windowWidth / 2.17, windowHeight / 2 + 365, 120, 120);
-  buttonfood.size(100, 100);
+  buttonfood.position(windowWidth / 2.17, windowHeight / 2 + 375, 120, 120);
+  buttonfood.size(90, 90);
   buttonfood.mouseClicked(feed);
 
   buttonwalk = createImg("walk.png");
-  buttonwalk.position(windowWidth / 3, windowHeight / 2 + 365, 120, 120);
-  buttonwalk.size(100, 100);
+  buttonwalk.position(windowWidth / 3, windowHeight / 2 + 375, 120, 120);
+  buttonwalk.size(90, 90);
   buttonwalk.mouseClicked(walk);
 
   textSize(30);
@@ -284,6 +281,28 @@ function main() {
 
 function explosion() {
   background(0);
+  gif_pet.remove();
+  buttonlist.remove();
+  if (music == true) {
+    soundOn.remove();
+  }
+  if (music == false) {
+    soundOff.remove();
+  }
+  buttonclothes.remove();
+  buttonfood.remove();
+  buttonwalk.remove();
+  loadImage('pet.png', img => {
+    image(img, windowWidth / 2.7, 100, 443, 745);
+  });
+  ohButton = createButton("Oh.");
+  ohButton.position(windowWidth / 2.17, windowHeight / 2 + 365);
+  ohButton.mouseClicked(gameOver);
+}
+
+function skeleton() {
+  background(0);
+  gif_pet.remove();
   buttonlist.remove();
   if (music == true) {
     soundOn.remove();
@@ -315,8 +334,8 @@ function clothes() {
   buttonfood.remove();
   buttonwalk.remove();
   backFromClothes = createImg("clothes.png");
-  backFromClothes.position(windowWidth / 1.7, windowHeight / 2 + 365, 120, 120);
-  backFromClothes.size(100, 100);
+  backFromClothes.position(windowWidth / 1.7, windowHeight / 2 + 375, 120, 120);
+  backFromClothes.size(90, 90);
   backFromClothes.mouseClicked(main);
   furColor = createButton("Fur");
   furColor.position(windowWidth / 3, windowHeight / 2 + 305);
@@ -345,6 +364,7 @@ function furMenu() {
 }
 
 function furPurple() {
+  gif_pet.remove();
   if (greenEyes == true) {
     purpleFur = true;
     blueFur = false;
@@ -365,6 +385,7 @@ function furPurple() {
 }
 
 function furBlue() {
+  gif_pet.remove();
   if (greenEyes == true) {
     purpleFur = false;
     blueFur = true;
@@ -399,6 +420,7 @@ function eyesMenu() {
   eyesOption2.mouseClicked(eyesRed);
 }
 function eyesGreen() {
+  gif_pet.remove();
   if (purpleFur == true) {
     greenEyes = true;
     redEyes = false;
@@ -418,6 +440,7 @@ function eyesGreen() {
   main();
 }
 function eyesRed() {
+  gif_pet.remove();
   if (purpleFur == true) {
     greenEyes = false;
     redEyes = true;
@@ -445,6 +468,7 @@ function soundToggleOff() {
   buttonfood.remove();
   buttonclothes.remove();
   buttonwalk.remove();
+  gif_pet.remove();
   main();
 }
 function soundToggleOn() {
@@ -455,6 +479,7 @@ function soundToggleOn() {
   buttonfood.remove();
   buttonclothes.remove();
   buttonwalk.remove();
+  gif_pet.remove();
   main();
 }
 
@@ -472,6 +497,7 @@ function clothesMenu() {
 function feed() {
   buttonclothes.remove();
   buttonlist.remove();
+  gif_pet.remove();
   if (music == true) {
     soundOn.remove();
   }
@@ -557,6 +583,7 @@ function walk() {
   loadImage('black.png', img3 => {
     image(img3, 0, windowHeight / 2 + 370, windowWidth, 100);
   });
+  gif_pet.remove();
   buttonlist.remove();
   if (music == true) {
     soundOn.remove();
@@ -568,9 +595,9 @@ function walk() {
   buttonfood.remove();
   buttonwalk.remove();
 
-  goBack = createImg("walk.png");
-  goBack.position(windowWidth / 3, windowHeight / 2 + 365, 120, 120);
-  goBack.size(100, 100);
+  goBack = createImg("goBack.png");
+  goBack.position(windowWidth / 3, windowHeight / 2 + 375, 120, 120);
+  goBack.size(90, 90);
   goBack.mouseClicked(goingBack);
   //create the button
   distance_button = createButton("start walk");
