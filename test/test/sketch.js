@@ -72,7 +72,7 @@ function distance_measure() {
   //End Button wird erzeugt
   end_button = createButton("end walk");
   //End Button wird platziert
-  end_button.position(windowWidth / 2, windowHeight - windowHeight / 4);
+  end_button.position(windowWidth / 2 - (borderResizeHeight() / 2), windowHeight - borderResizeHeight() * 2);
   //Methode die ausgeführt wird, wenn der End Button gedrückt wird
   end_button.mouseClicked(show_distance);
 }
@@ -94,7 +94,7 @@ function show_distance() {
   distance_button = createButton("start walk");
 
   //position of the button
-  distance_button.position(windowWidth / 2, windowHeight - windowHeight / 4);
+  distance_button.position(windowWidth / 2 - (borderResizeHeight() / 2), windowHeight - borderResizeHeight() * 2);
   // when button is clicked distance measure function is called
   distance_button.mouseClicked(distance_measure);
 
@@ -179,49 +179,48 @@ function main() {
     if (hunger > 30 && hunger < 70) {
       gif_pet = createImg('idle_purple_green.gif');
       gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
-      console.log(windowWidth + ' ' + windowHeight);
       gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
     }
     if (hunger > 60) {
       gif_pet = createImg('pet_purple_green_chubby.png');
-      gif_pet.position(windowWidth / 2.7, 140);
-      gif_pet.size(413, 705);
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
     }
   }
   if (purpleRed == true) {
     if (hunger > 30 && hunger < 70) {
       gif_pet = createImg('idle_purple_red.gif');
-      gif_pet.position(windowWidth / 2.7, 140);
-      gif_pet.size(413, 705);
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
     }
     if (hunger > 60) {
       gif_pet = createImg('pet_purple_red_chubby.png');
-      gif_pet.position(windowWidth / 2.7, 140);
-      gif_pet.size(413, 705);
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
     }
   }
   if (blueGreen == true) {
     if (hunger > 30 && hunger < 70) {
       gif_pet = createImg('idle_blue_green.gif');
-      gif_pet.position(windowWidth / 2.7, 140);
-      gif_pet.size(413, 705);
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
     }
     if (hunger > 60) {
       gif_pet = createImg('pet_blue_green_chubby.png');
-      gif_pet.position(windowWidth / 2.7, 140);
-      gif_pet.size(413, 705);
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
     }
   }
   if (blueRed == true) {
     if (hunger > 30 && hunger < 70) {
       gif_pet = createImg('idle_blue_red.gif');
-      gif_pet.position(windowWidth / 2.7, 140);
-      gif_pet.size(413, 705);
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
     }
     if (hunger > 60) {
       gif_pet = createImg('pet_blue_red_chubby.png');
-      gif_pet.position(windowWidth / 2.7, 140);
-      gif_pet.size(413, 705);
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
     }
   }
 
@@ -289,9 +288,9 @@ function explosion() {
   buttonclothes.remove();
   buttonfood.remove();
   buttonwalk.remove();
-  loadImage('pet.png', img => {
-    image(img, windowWidth / 2.7, 100, 443, 745);
-  });
+  gif_pet = createImg('idle_purple_green.gif');
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
   ohButton = createButton("Oh.");
   ohButton.position(windowWidth / 2.17, windowHeight / 2 + 365);
   ohButton.mouseClicked(gameOver);
@@ -331,17 +330,17 @@ function clothes() {
   buttonfood.remove();
   buttonwalk.remove();
   backFromClothes = createImg("clothes.png");
-  backFromClothes.position(windowWidth / 1.7, windowHeight / 2 + 375, 120, 120);
-  backFromClothes.size(90, 90);
+  backFromClothes.position(min(windowWidth / 2 - (borderResizeHeight() / 2) + (borderResizeHeight() * 2), windowWidth - borderResizeHeight()), windowHeight - borderResizeHeight());
+  backFromClothes.size(borderResizeHeight(), borderResizeHeight());
   backFromClothes.mouseClicked(main);
   furColor = createButton("Fur");
-  furColor.position(windowWidth / 3, windowHeight / 2 + 305);
+  furColor.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0), windowHeight - borderResizeHeight() * 2);
   furColor.mouseClicked(furMenu);
   eyeColor = createButton("Eyes");
-  eyeColor.position(windowWidth / 2.17, windowHeight / 2 + 305);
+  eyeColor.position(windowWidth / 2 - (borderResizeHeight() / 2), windowHeight - borderResizeHeight() * 2);
   eyeColor.mouseClicked(eyesMenu);
   accessoires = createButton("Clothes");
-  accessoires.position(windowWidth / 1.7, windowHeight / 2 + 305);
+  accessoires.position(min(windowWidth / 2 - (borderResizeHeight() / 2) + (borderResizeHeight() * 2), windowWidth - borderResizeHeight()), windowHeight - borderResizeHeight() * 2);
   accessoires.mouseClicked(clothesMenu);
 }
 
@@ -351,11 +350,11 @@ function furMenu() {
   eyeColor.remove();
   accessoires.remove();
   furOption1 = createImg("purple.png");
-  furOption1.position(windowWidth / 3, windowHeight / 2 + 305);
+  furOption1.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0), windowHeight - borderResizeHeight() * 2);
   furOption1.size(50, 50);
   furOption1.mouseClicked(furPurple);
   furOption2 = createImg("blue.png");
-  furOption2.position(windowWidth / 1.7, windowHeight / 2 + 305);
+  furOption2.position(min(windowWidth / 2 - (borderResizeHeight() / 2) + (borderResizeHeight() * 2), windowWidth - borderResizeHeight()), windowHeight - borderResizeHeight() * 2);
   furOption2.size(50, 50);
   furOption2.mouseClicked(furBlue);
 }
@@ -408,11 +407,11 @@ function eyesMenu() {
   eyeColor.remove();
   accessoires.remove();
   eyesOption1 = createImg("green.png");
-  eyesOption1.position(windowWidth / 3, windowHeight / 2 + 305);
+  eyesOption1.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0), windowHeight - borderResizeHeight() * 2);
   eyesOption1.size(50, 50);
   eyesOption1.mouseClicked(eyesGreen);
   eyesOption2 = createImg("red.png");
-  eyesOption2.position(windowWidth / 1.7, windowHeight / 2 + 305);
+  eyesOption2.position(min(windowWidth / 2 - (borderResizeHeight() / 2) + (borderResizeHeight() * 2), windowWidth - borderResizeHeight()), windowHeight - borderResizeHeight() * 2);
   eyesOption2.size(50, 50);
   eyesOption2.mouseClicked(eyesRed);
 }
@@ -486,9 +485,9 @@ function clothesMenu() {
   eyeColor.remove();
   accessoires.remove();
   clothOption1 = createButton("Option 1");
-  clothOption1.position(windowWidth / 3, windowHeight / 2 + 305);
+  clothOption1.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0), windowHeight - borderResizeHeight() * 2);
   clothOption2 = createButton("Option 2");
-  clothOption2.position(windowWidth / 1.7, windowHeight / 2 + 305);
+  clothOption2.position(min(windowWidth / 2 - (borderResizeHeight() / 2) + (borderResizeHeight() * 2), windowWidth - borderResizeHeight()), windowHeight - borderResizeHeight() * 2);
 }
 
 function feed() {
@@ -503,9 +502,9 @@ function feed() {
   }
   buttonfood.remove();
   buttonwalk.remove();
-  if (hunger == 100) {
+  /*if (hunger == 100) {
     explosion();
-  }
+  }*/
   hunger += 10;
   console.log(hunger);
   main();
@@ -595,14 +594,14 @@ function walk() {
   buttonwalk.remove();
 
   goBack = createImg("goBack.png");
-  goBack.position(windowWidth / 3, windowHeight / 2 + 375, 120, 120);
-  goBack.size(90, 90);
+  goBack.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0), windowHeight - borderResizeHeight());
+  goBack.size(borderResizeHeight(), borderResizeHeight());
   goBack.mouseClicked(goingBack);
   //create the button
   distance_button = createButton("start walk");
 
   //position of the button
-  distance_button.position(windowWidth / 2, windowHeight - windowHeight / 4);
+  distance_button.position(windowWidth / 2 - (borderResizeHeight() / 2), windowHeight - borderResizeHeight() * 2);
   // when button is clicked distance measure function is called
   distance_button.mouseClicked(distance_measure);
 }
