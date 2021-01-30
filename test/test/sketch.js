@@ -37,6 +37,42 @@ let music = true;
 let walkstarted = true;
 var gif_pet;
 
+var database; // database reference
+var players; // Liste aller Spieler
+
+
+
+
+
+
+var firebaseConfig = {
+  apiKey: "AIzaSyDnoxMbdGuX63QAeTZ_3y7on8qTj1eBkuI",
+  authDomain: "virtual-pet-e974b.firebaseapp.com",
+  databaseURL: "https://virtual-pet-e974b.firebaseio.com",
+  projectId: "virtual-pet-e974b",
+  storageBucket: "virtual-pet-e974b.appspot.com",
+  messagingSenderId: "1066275384712",
+  appId: "1:1066275384712:web:9365d4d8f759a389c8de3d"
+};
+
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  console.log(firebase);
+  console.log('uid:' + uid);
+  database = firebase.database();
+
+
+
+
+
+
+
+
+
+
+
+
 //Startposition wird gespeichert
 navigator.geolocation.getCurrentPosition(position => {
   lat = (position.coords.latitude);
