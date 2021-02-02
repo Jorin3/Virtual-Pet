@@ -31,7 +31,7 @@ var database; // db ref
 let beginning = false;
 let end = false;
 let hunger = 50;
-var petName = '';
+var petName = 'aaaaaaaaaaaaa';
 let dist = 0.0; // Distanzvariable
 let music = true;
 let walkstarted = true;
@@ -44,7 +44,7 @@ var players; // Liste aller Spieler
 
 
 
-
+/*
 var firebaseConfig = {
   apiKey: "AIzaSyDnoxMbdGuX63QAeTZ_3y7on8qTj1eBkuI",
   authDomain: "virtual-pet-e974b.firebaseapp.com",
@@ -61,7 +61,7 @@ var firebaseConfig = {
   console.log(firebase);
   console.log('uid:' + uid);
   database = firebase.database();
-
+*/
 
 
 
@@ -100,6 +100,7 @@ function positionPing(position) {
 
 //Distanz wird alle 5 Sekunden berechnet, End Button wird bereit gestellt
 function distance_measure() {
+  newBackground();
   walkStarted = true;
   dist = 0;
   intervalCurrentPosition(positionPing, 5000);
@@ -117,9 +118,12 @@ function distance_measure() {
 function show_distance() {
   roundThis();
   //text ausgabe
+  /*
   textSize(30);
   fill(255);
   text("you walked " + rounded + " kilometers", windowWidth / 2 - 150, windowHeight / 2);
+  */
+ show_walk = true;
 
   clearIntervalPos();
 
@@ -165,7 +169,14 @@ let blueFur = false;
 let greenEyes = true;
 let redEyes = false;
 let displayName;
-let drawInit = false;
+let displayIntro;
+let displayAccept;
+let displayWalk;
+let show_name = false;
+let show_intro = false;
+let show_accept = false;
+let show_walk = false;
+let answerNo = false;
 
 function preload() {
   font = loadFont("Montserrat-Regular.ttf");
@@ -182,6 +193,12 @@ function setup() {
   });
   displayName = createGraphics(borderResizeHeight() * 3, borderResizeHeight());
   displayName.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0) + borderResizeHeight(), 0);
+  displayIntro = createGraphics(borderResizeHeight() * 3, borderResizeHeight());
+  displayIntro.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0) + borderResizeHeight(), 0);
+  displayAccept = createGraphics(borderResizeHeight() * 3, borderResizeHeight());
+  displayAccept.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0) + borderResizeHeight(), 0);
+  displayWalk = createGraphics(borderResizeHeight() * 3, borderResizeHeight());
+  displayWalk.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0) + borderResizeHeight(), 0);
   if (beginning == false) {
     egg();
   } else {
@@ -190,6 +207,8 @@ function setup() {
 }
 
 function main() {
+  show_accept = false;
+  show_name = true;
   if (acc == true) {
     furColor.remove();
     eyeColor.remove();
@@ -296,13 +315,53 @@ function main() {
   
 }
 
-function draw () {
-  if (drawInit == false) {
+function draw() {
+  if (show_name == true) {
+    clear();
+    newBackground();
     displayName.fill(255);
     displayName.text(petName, 0, 100);
-    image(displayName, 50, 50);
-    drawInit = true;
+    displayName.textSize(30);
+    image(displayName, windowWidth / 2 - (textWidth(petName) / 2), 0);
+    show_name = false;
   }
+  if (show_intro == true) {
+    clear();
+    newBackground();
+    displayIntro.fill(255);
+    displayIntro.textSize(30);
+    displayIntro.text('Name your pet!', 0, 100);
+    image(displayIntro, windowWidth / 2 - (textWidth('Name your pet!') / 2), borderResizeHeight() * 2);
+    show_intro = false;
+  }
+  if (show_accept == true) {
+    clear();
+    newBackground();
+    displayAccept.fill(255);
+    displayAccept.textSize(30);
+    displayAccept.text('Is this its name?: ' + petName, 0, 100);
+    image(displayAccept, windowWidth / 2 - (textWidth('Is this its name?: ' + petName) / 2), borderResizeHeight() * 2);
+    show_accept = false;
+  }
+  if (show_walk == true) {
+    clear();
+    newBackground();
+    displayWalk.fill(255);
+    displayWalk.textSize(30);
+    displayWalk.text("you walked " + rounded + " kilometers", 0, 100);
+    image(displayWalk, windowWidth / 2 - (textWidth("you walked " + rounded + " kilometers") / 2), borderResizeHeight() * 2);
+    show_walk = false;
+  }
+}
+
+function newBackground() {
+  background(90);
+  loadImage('black.png', img2 => {
+    image(img2, 0, 0, windowWidth, borderResizeHeight());
+  });
+  loadImage('black.png', img3 => {
+    image(img3, 0, windowHeight - borderResizeHeight(), windowWidth, borderResizeHeight());
+  });
 }
 
 function borderResizeHeight() {
@@ -559,6 +618,10 @@ function gameOver() {
 }
 
 function egg() {
+  show_intro = true;
+  if (answerNo == true) {
+    displayAccept.remove();
+  }
   /*background(90);
   loadImage('black.png', img2 => {
     image(img2, 0, 0, windowWidth, 100);
@@ -574,17 +637,17 @@ function egg() {
     restart.remove();
   }
   beginning = true;
-  textSize(30);
-  fill(255);
   //To Do: text("Name your pet!", windowWidth / 2, windowHeight / 3);
   inp = createInput('');
-  inp.position(windowWidth / 2 - 150, windowHeight / 3 + 50);
+  inp.position(windowWidth / 2 - (textWidth(inp) / 2), borderResizeHeight() * 3);
   nameThePet = createButton("Name it!");
-  nameThePet.position(windowWidth / 2 - 150, windowHeight / 3 + 100);
+  nameThePet.position(windowWidth / 2 - (textWidth("Name it!") / 2), borderResizeHeight() * 4);
   nameThePet.mouseClicked(areYouSure);
 }
 
 function areYouSure() {
+  answerNo = true;
+  show_accept = true;
   freshStart = true;
   nameThePet.remove();
   inp.remove();
@@ -601,10 +664,10 @@ function areYouSure() {
   fill(255);
   //To Do: text("Is this its name?: " + petName, windowWidth / 2, windowHeight / 3);
   yesButton = createButton("Yes");
-  yesButton.position(windowWidth / 2 - 150, windowHeight / 3 + 50)
+  yesButton.position(windowWidth / 2 - 50, borderResizeHeight() * 4);
   yesButton.mouseClicked(main);
   noButton = createButton("No");
-  noButton.position(windowWidth / 2 - 100, windowHeight / 3 + 50)
+  noButton.position(windowWidth / 2 + 50, borderResizeHeight() * 4);
   noButton.mouseClicked(egg);
 }
 
