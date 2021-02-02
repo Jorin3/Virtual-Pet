@@ -178,9 +178,9 @@ let show_accept = false;
 let show_walk = false;
 let answerNo = false;
 
-function preload() {
+/*function preload() {
   font = loadFont("Montserrat-Regular.ttf");
-}
+}*/
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -317,39 +317,61 @@ function main() {
 
 function draw() {
   if (show_name == true) {
-    clear();
     newBackground();
+
+    fill(255);
+    textSize(30);
+    text(petName, windowWidth / 2 - (textWidth(petName) / 2), 0);
+    /*
     displayName.fill(255);
-    displayName.text(petName, 0, 100);
     displayName.textSize(30);
+    displayName.text(petName, 0, 100);
     image(displayName, windowWidth / 2 - (textWidth(petName) / 2), 0);
+    */
     show_name = false;
   }
   if (show_intro == true) {
-    clear();
     newBackground();
+
+    fill(255);
+    textSize(30);
+    text('Name your pet!', windowWidth / 2 - (textWidth('Name your pet!') / 2), borderResizeHeight() * 2);
+    /*
     displayIntro.fill(255);
-    displayIntro.textSize(30);
+    displayIntro.textSize(50);
     displayIntro.text('Name your pet!', 0, 100);
-    image(displayIntro, windowWidth / 2 - (textWidth('Name your pet!') / 2), borderResizeHeight() * 2);
+    image(displayIntro, windowWidth / 2 - (textWidth('Name your pet!') / 2), borderResizeHeight());
+    */
     show_intro = false;
   }
   if (show_accept == true) {
-    clear();
     newBackground();
+
+    fill(255);
+    textSize(30);
+    text('Is this its name?: ' + petName, windowWidth / 2 - (textWidth('Is this its name?: ' + petName) / 2), borderResizeHeight() * 2);
+    /*
     displayAccept.fill(255);
     displayAccept.textSize(30);
     displayAccept.text('Is this its name?: ' + petName, 0, 100);
     image(displayAccept, windowWidth / 2 - (textWidth('Is this its name?: ' + petName) / 2), borderResizeHeight() * 2);
+    */
     show_accept = false;
   }
   if (show_walk == true) {
-    clear();
     newBackground();
+
+    fill(255);
+    textSize(30);
+    text("you walked" , windowWidth / 2 - (textWidth("you walked") / 2), borderResizeHeight() * 2);
+    text(rounded, windowWidth / 2 - (textWidth(rounded) / 2), borderResizeHeight() * 2 + 50);
+    text("kilometers", windowWidth / 2 - (textWidth("kilometers") / 2), borderResizeHeight() * 2 + 100);
+    /*
     displayWalk.fill(255);
     displayWalk.textSize(30);
     displayWalk.text("you walked " + rounded + " kilometers", 0, 100);
     image(displayWalk, windowWidth / 2 - (textWidth("you walked " + rounded + " kilometers") / 2), borderResizeHeight() * 2);
+    */
     show_walk = false;
   }
 }
@@ -660,8 +682,6 @@ function areYouSure() {
   loadImage('black.png', img3 => {
     image(img3, 0, windowHeight / 2 + 370, windowWidth, 100);
   });*/
-  textSize(30);
-  fill(255);
   //To Do: text("Is this its name?: " + petName, windowWidth / 2, windowHeight / 3);
   yesButton = createButton("Yes");
   yesButton.position(windowWidth / 2 - 50, borderResizeHeight() * 4);
