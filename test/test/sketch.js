@@ -84,6 +84,8 @@ let appearance = "purpleGreen";
 let savePetName = false;
 let saveHunger = false;
 let saveAppearance = false;
+let score = 0;
+let do_interval = false;
 
 var database; // database reference
 var players; // Liste aller Spieler
@@ -212,6 +214,11 @@ function checkCookie_Hunger() {
   }
 }
 
+function checkCookie_Distance() {
+  var this_user = getCookie("distance");
+  score = this_user;
+}
+
 //Startposition wird gespeichert
 navigator.geolocation.getCurrentPosition(position => {
   lat = (position.coords.latitude);
@@ -242,6 +249,7 @@ function distance_measure() {
   init_walk1 = false;
   init_walk2 = true;
   init_walk3 = false;
+  do_interval = true;
   newBackground();
   walkstarted = true;
 
@@ -277,8 +285,20 @@ function show_distance() {
 
   saveHunger = true;
 
-  hunger -= 10;
+  if (dist != 0) {
+    hunger -= 10;
+  }
+  
   roundThis();
+  if (dist != 0) {
+    if (rounded > score) {
+      score = rounded;
+      console.log(score + " " + rounded);
+    }
+    console.log(score + " " + rounded);
+  }
+  console.log(score + " " + rounded);
+  
   //text ausgabe
   /*
   textSize(30);
@@ -412,6 +432,7 @@ function main() {
     setCookie("looks", appearance);
     saveAppearance = false;
   }
+  setCookie("distance", score);
 
   checkCookie_Hunger();
 
@@ -1140,6 +1161,7 @@ function goingBack() {
   init_walk2 = false;
   init_walk3 = false;
   distance_button.remove();
+  clearIntervalPos();
   if (end == true) {
     end_button.remove();
   }
