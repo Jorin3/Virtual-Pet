@@ -85,7 +85,12 @@ let savePetName = false;
 let saveHunger = false;
 let saveAppearance = false;
 let score = 0;
-let do_interval = false;
+let deathByExplosion = false;
+let deathByStarvation = false;
+let firstPet = true;
+let init_walkPet = false;
+let firstTime = true;
+let finishTutorial = false;
 
 var database; // database reference
 var players; // Liste aller Spieler
@@ -95,19 +100,10 @@ function setCookie(cname, cvalue) {
   document.cookie = cname + "=" + cvalue;
 }
 
-/*
-function getCookie_Name(cname) {
-  var the_name = cname + "=";
-  var ca = document.cookie.split(';');
-  var c = ca[0];
-  return cvalue;
-}
-*/
-
 function getCookie(cname) {
   var the_name = cname + "=";
   var ca = document.cookie.split(';');
-  for(var i = 0; i < ca.length; i++) {
+  for (var i = 0; i < ca.length; i++) {
     var c = ca[i];
     while (c.charAt(0) == ' ') {
       c = c.substring(1);
@@ -259,6 +255,27 @@ function distance_measure() {
   goBack.size(borderResizeHeight(), borderResizeHeight());
   goBack.mouseClicked(goingBack);
 
+  if (purpleGreen == true) {
+    walk_pet = createImg('walking_purple_green.gif');
+    walk_pet.position(windowWidth / 2 - (23.0 / 37.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+    walk_pet.size(23.0 / 37.0 * petResizeHeight(), petResizeHeight());
+  }
+  if (purpleRed == true) {
+    walk_pet = createImg('walking_purple_red.gif');
+    walk_pet.position(windowWidth / 2 - (23.0 / 37.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+    walk_pet.size(23.0 / 37.0 * petResizeHeight(), petResizeHeight());
+  }
+  if (blueGreen == true) {
+    walk_pet = createImg('walking_blue_green.gif');
+    walk_pet.position(windowWidth / 2 - (23.0 / 37.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+    walk_pet.size(23.0 / 37.0 * petResizeHeight(), petResizeHeight());
+  }
+  if (blueRed == true) {
+    walk_pet = createImg('walking_blue_red.gif');
+    walk_pet.position(windowWidth / 2 - (23.0 / 37.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+    walk_pet.size(23.0 / 37.0 * petResizeHeight(), petResizeHeight());
+  }
+  init_walkPet = true;
   dist = 0;
   intervalCurrentPosition(positionPing, 5000);
   end = true;
@@ -273,10 +290,11 @@ function distance_measure() {
 
 //Gibt Distanz zurück in Textform
 function show_distance() {
+
   init_walk1 = false;
   init_walk2 = false;
   init_walk3 = true;
-
+  walk_pet.remove();
   goBack.remove();
   goBack = createImg("goBack.png");
   goBack.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0), windowHeight - borderResizeHeight());
@@ -284,28 +302,24 @@ function show_distance() {
   goBack.mouseClicked(goingBack);
 
   saveHunger = true;
-
   if (dist != 0) {
     hunger -= 10;
   }
-  
+
   roundThis();
   if (dist != 0) {
     if (rounded > score) {
       score = rounded;
-      console.log(score + " " + rounded);
     }
-    console.log(score + " " + rounded);
   }
-  console.log(score + " " + rounded);
-  
+
   //text ausgabe
   /*
   textSize(30);
   fill(255);
   text("you walked " + rounded + " kilometers", windowWidth / 2 - 150, windowHeight / 2);
   */
- show_walk = true;
+  show_walk = true;
 
   clearIntervalPos();
 
@@ -363,27 +377,33 @@ function setup() {
     messagingSenderId: "1066275384712",
     appId: "1:1066275384712:web:9365d4d8f759a389c8de3d"
   }
-  
-  
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    console.log(firebase);
-    console.log('uid:' + uid);
-    database = firebase.database();
 
-    //COOKIE DELETER
-    /*
-    document.cookie = "petname=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "looks=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "hunger=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    */
 
-    checkCookie_Intro();
-    checkCookie_Looks();
-    console.log(beginning);
-  
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  console.log(firebase);
+  console.log('uid:' + uid);
+  database = firebase.database();
+
+  //COOKIE DELETER
+  /*
+  document.cookie = "petname=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = "looks=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = "hunger=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = "distance=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  */
+
+  checkCookie_Intro();
+  checkCookie_Looks();
+  console.log(beginning);
+
   if (beginning == false) {
-    egg();
+    if (firstTime == true) {
+      tutorial();
+    }
+    if (firstTime == false) {
+      egg();
+    }
   } else {
     main();
   }
@@ -398,10 +418,10 @@ function main() {
   init_eyes = false;
   init_customize = false;
 
+
   if (acc == true) {
     furColor.remove();
     eyeColor.remove();
-    accessoires.remove();
     backFromClothes.remove();
   }
   if (fur == true) {
@@ -416,7 +436,7 @@ function main() {
     clothOption1.remove();
     clothOption2.remove();
   }
-  if (thereWasAccept == true) {  
+  if (thereWasAccept == true) {
     yesButton.remove();
     noButton.remove();
   }
@@ -438,40 +458,47 @@ function main() {
 
   createPet();
 
-    buttonlist = createImg('list.png');
-    buttonlist.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0), 0, 120, 120);
-    buttonlist.size(borderResizeHeight(), borderResizeHeight());
-  
-    if (music == true) {
-      soundOn = createImg("sound.png");
-      soundOn.position(min(windowWidth / 2 - (borderResizeHeight() / 2) + (borderResizeHeight() * 2), windowWidth - borderResizeHeight()), 0, 120);
-      soundOn.size(borderResizeHeight(), borderResizeHeight());
-      soundOn.mouseClicked(soundToggleOff);
-    }
-    if (music == false) {
-      soundOff = createImg("soundOff.png");
-      soundOff.position(min(windowWidth / 2 - (borderResizeHeight() / 2) + (borderResizeHeight() * 2), windowWidth - borderResizeHeight()), 0, 120);
-      soundOff.size(borderResizeHeight(), borderResizeHeight());
-      soundOff.mouseClicked(soundToggleOn);
-    }
-  
-  
-    buttonclothes = createImg("clothes.png");
-    buttonclothes.position(min(windowWidth / 2 - (borderResizeHeight() / 2) + (borderResizeHeight() * 2), windowWidth - borderResizeHeight()), windowHeight - borderResizeHeight());
-    buttonclothes.size(borderResizeHeight(), borderResizeHeight());
-    buttonclothes.mouseClicked(clothes);
-  
-    buttonfood = createImg("food.png");
-    buttonfood.position(windowWidth / 2 - (borderResizeHeight() / 2), windowHeight - borderResizeHeight());
-    buttonfood.size(borderResizeHeight(), borderResizeHeight());
-    buttonfood.mouseClicked(feed);
-  
-    buttonwalk = createImg("walk.png");
-    buttonwalk.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0), windowHeight - borderResizeHeight());
-    buttonwalk.size(borderResizeHeight(), borderResizeHeight());
-    buttonwalk.mouseClicked(walk);
-    init_pet = true;
-    console.log(document.cookie);
+  buttonlist = createImg('list.png');
+  buttonlist.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0), 0, 120, 120);
+  buttonlist.size(borderResizeHeight(), borderResizeHeight());
+
+  if (music == true) {
+    soundOn = createImg("sound.png");
+    soundOn.position(min(windowWidth / 2 - (borderResizeHeight() / 2) + (borderResizeHeight() * 2), windowWidth - borderResizeHeight()), 0, 120);
+    soundOn.size(borderResizeHeight(), borderResizeHeight());
+    soundOn.mouseClicked(soundToggleOff);
+  }
+  if (music == false) {
+    soundOff = createImg("soundOff.png");
+    soundOff.position(min(windowWidth / 2 - (borderResizeHeight() / 2) + (borderResizeHeight() * 2), windowWidth - borderResizeHeight()), 0, 120);
+    soundOff.size(borderResizeHeight(), borderResizeHeight());
+    soundOff.mouseClicked(soundToggleOn);
+  }
+
+
+  buttonclothes = createImg("clothes.png");
+  buttonclothes.position(min(windowWidth / 2 - (borderResizeHeight() / 2) + (borderResizeHeight() * 2), windowWidth - borderResizeHeight()), windowHeight - borderResizeHeight());
+  buttonclothes.size(borderResizeHeight(), borderResizeHeight());
+  buttonclothes.mouseClicked(clothes);
+
+  buttonfood = createImg("food.png");
+  buttonfood.position(windowWidth / 2 - (borderResizeHeight() / 2), windowHeight - borderResizeHeight());
+  buttonfood.size(borderResizeHeight(), borderResizeHeight());
+  buttonfood.mouseClicked(feed);
+
+  buttonwalk = createImg("walk.png");
+  buttonwalk.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0), windowHeight - borderResizeHeight());
+  buttonwalk.size(borderResizeHeight(), borderResizeHeight());
+  buttonwalk.mouseClicked(walk);
+  init_pet = true;
+  console.log(document.cookie);
+
+  if (hunger > 100) {
+    explosion();
+  }
+  if (hunger < 0) {
+    skeleton();
+  }
 }
 
 function pet_windowChange() {
@@ -525,7 +552,6 @@ function customize_windowChange() {
   backFromClothes.remove();
   furColor.remove();
   eyeColor.remove();
-  accessoires.remove();
   newBackground();
   clothes();
 }
@@ -561,6 +587,60 @@ function clothes_windowChange() {
 }
 
 function draw() {
+  if (deathByExplosion == true) {
+    if (purpleGreen == true) {
+      dead_pet = createImg('explosion_purple_green.gif');
+      dead_pet.position(windowWidth / 2 - (900.0 / 1300.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      dead_pet.size(900.0 / 1300.0 * petResizeHeight(), petResizeHeight());
+      setTimeout(explosionFinish, 1400);
+    }
+    if (purpleRed == true) {
+      dead_pet = createImg('explosion_purple_red.gif');
+      dead_pet.position(windowWidth / 2 - (900.0 / 1300.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      dead_pet.size(900.0 / 1300.0 * petResizeHeight(), petResizeHeight());
+      setTimeout(explosionFinish, 1400);
+    }
+    if (blueGreen == true) {
+      dead_pet = createImg('explosion_blue_green.gif');
+      dead_pet.position(windowWidth / 2 - (900.0 / 1300.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      dead_pet.size(900.0 / 1300.0 * petResizeHeight(), petResizeHeight());
+      setTimeout(explosionFinish, 1400);
+    }
+    if (blueRed == true) {
+      dead_pet = createImg('explosion_blue_red.gif');
+      dead_pet.position(windowWidth / 2 - (900.0 / 1300.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      dead_pet.size(900.0 / 1300.0 * petResizeHeight(), petResizeHeight());
+      setTimeout(explosionFinish, 1400);
+    }
+    deathByExplosion = false;
+  }
+  if (deathByStarvation == true) {
+    if (purpleGreen == true) {
+      dead_pet = createImg('skeleton_purple_green.gif');
+      dead_pet.position(windowWidth / 2 - (553.0 / 1000.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      dead_pet.size(553.0 / 1000.0 * petResizeHeight(), petResizeHeight());
+      setTimeout(skeletonFinish, 2000);
+    }
+    if (purpleRed == true) {
+      dead_pet = createImg('skeleton_purple_red.gif');
+      dead_pet.position(windowWidth / 2 - (553.0 / 1000.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      dead_pet.size(553.0 / 1000.0 * petResizeHeight(), petResizeHeight());
+      setTimeout(skeletonFinish, 2000);
+    }
+    if (blueGreen == true) {
+      dead_pet = createImg('skeleton_blue_green.gif');
+      dead_pet.position(windowWidth / 2 - (553.0 / 1000.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      dead_pet.size(553.0 / 1000.0 * petResizeHeight(), petResizeHeight());
+      setTimeout(skeletonFinish, 2000);
+    }
+    if (blueRed == true) {
+      dead_pet = createImg('skeleton_blue_red.gif');
+      dead_pet.position(windowWidth / 2 - (553.0 / 1000.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      dead_pet.size(553.0 / 1000.0 * petResizeHeight(), petResizeHeight());
+      setTimeout(skeletonFinish, 2000);
+    }
+    deathByStarvation = false;
+  }
   if (init_pet == true) {
     if (windowWidth != initial_width || windowHeight != initial_height) {
       initial_width = windowWidth;
@@ -568,7 +648,7 @@ function draw() {
       pet_windowChange();
     }
   }
-  
+
   if (init_walk1 == true) {
     if (windowWidth != initial_width || windowHeight != initial_height) {
       initial_width = windowWidth;
@@ -675,7 +755,7 @@ function draw() {
 
     fill(255);
     textSize(30);
-    text("you walked" , windowWidth / 2 - (textWidth("you walked") / 2), borderResizeHeight() * 2);
+    text("you walked", windowWidth / 2 - (textWidth("you walked") / 2), borderResizeHeight() * 2);
     text(rounded, windowWidth / 2 - (textWidth(rounded) / 2), borderResizeHeight() * 2 + 50);
     text("kilometers", windowWidth / 2 - (textWidth("kilometers") / 2), borderResizeHeight() * 2 + 100);
     /*
@@ -699,6 +779,9 @@ function newBackground() {
 }
 
 function createPet() {
+  if (firstPet == false) {
+    gif_pet.remove();
+  }
   if (purpleGreen == true) {
     if (hunger > 30 && hunger < 70) {
       gif_pet = createImg('idle_purple_green.gif');
@@ -712,6 +795,16 @@ function createPet() {
     }
     if (hunger > 80) {
       gif_pet = createImg('fat_idle_purple_green.gif');
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
+    }
+    if (hunger > 10 && hunger < 40) {
+      gif_pet = createImg('thin_idle_purple_green.gif');
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
+    }
+    if (hunger < 20) {
+      gif_pet = createImg('skinny_idle_purple_green.gif');
       gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
       gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
     }
@@ -732,6 +825,16 @@ function createPet() {
       gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
       gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
     }
+    if (hunger > 10 && hunger < 40) {
+      gif_pet = createImg('thin_idle_purple_red.gif');
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
+    }
+    if (hunger < 20) {
+      gif_pet = createImg('skinny_idle_purple_red.gif');
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
+    }
   }
   if (blueGreen == true) {
     if (hunger > 30 && hunger < 70) {
@@ -746,6 +849,16 @@ function createPet() {
     }
     if (hunger > 80) {
       gif_pet = createImg('fat_idle_blue_green.gif');
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
+    }
+    if (hunger > 10 && hunger < 40) {
+      gif_pet = createImg('thin_idle_blue_green.gif');
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
+    }
+    if (hunger < 20) {
+      gif_pet = createImg('skinny_idle_blue_green.gif');
       gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
       gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
     }
@@ -766,7 +879,18 @@ function createPet() {
       gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
       gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
     }
+    if (hunger > 10 && hunger < 40) {
+      gif_pet = createImg('thin_idle_blue_red.gif');
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
+    }
+    if (hunger < 20) {
+      gif_pet = createImg('skinny_idle_blue_red.gif');
+      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
+    }
   }
+  firstPet = false;
 }
 
 function borderResizeHeight() {
@@ -775,8 +899,21 @@ function borderResizeHeight() {
 function petResizeHeight() {
   return windowHeight * 0.7;
 }
+
+function explosionFinish() {
+  dead_pet.remove();
+  dead_pet = createImg('explosion_death.png');
+  dead_pet.position(windowWidth / 2 - (900.0 / 1300.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+  dead_pet.size(900.0 / 1300.0 * petResizeHeight(), petResizeHeight());
+}
+function skeletonFinish() {
+  dead_pet.remove();
+  dead_pet = createImg('skeleton_death.png');
+  dead_pet.position(windowWidth / 2 - (553.0 / 1000.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
+  dead_pet.size(553.0 / 1000.0 * petResizeHeight(), petResizeHeight());
+}
 function explosion() {
-  background(0);
+  init_pet = false;
   gif_pet.remove();
   buttonlist.remove();
   if (music == true) {
@@ -788,16 +925,15 @@ function explosion() {
   buttonclothes.remove();
   buttonfood.remove();
   buttonwalk.remove();
-  gif_pet = createImg('idle_purple_green.gif');
-      gif_pet.position(windowWidth / 2 - (553.0 / 915.0 * petResizeHeight() / 2), windowHeight / 2 - (petResizeHeight() / 2));
-      gif_pet.size(553.0 / 915.0 * petResizeHeight(), petResizeHeight());
+  background(0);
+  deathByExplosion = true;
   ohButton = createButton("Oh.");
-  ohButton.position(windowWidth / 2.17, windowHeight / 2 + 365);
+  ohButton.position(windowWidth / 2 - (borderResizeHeight() / 2), windowHeight - borderResizeHeight());
   ohButton.mouseClicked(gameOver);
 }
 
 function skeleton() {
-  background(0);
+  init_pet = false;
   gif_pet.remove();
   buttonlist.remove();
   if (music == true) {
@@ -809,11 +945,10 @@ function skeleton() {
   buttonclothes.remove();
   buttonfood.remove();
   buttonwalk.remove();
-  loadImage('pet.png', img => {
-    image(img, windowWidth / 2.7, 100, 443, 745);
-  });
+  background(0);
+  deathByStarvation = true;
   ohButton = createButton("Oh.");
-  ohButton.position(windowWidth / 2.17, windowHeight / 2 + 365);
+  ohButton.position(windowWidth / 2 - (borderResizeHeight() / 2), windowHeight - borderResizeHeight());
   ohButton.mouseClicked(gameOver);
 }
 
@@ -839,11 +974,8 @@ function clothes() {
   furColor.position(max(windowWidth / 2 - (borderResizeHeight() / 2) - (borderResizeHeight() * 2), 0), windowHeight - borderResizeHeight() * 2);
   furColor.mouseClicked(furMenu);
   eyeColor = createButton("Eyes");
-  eyeColor.position(windowWidth / 2 - (borderResizeHeight() / 2), windowHeight - borderResizeHeight() * 2);
+  eyeColor.position(min(windowWidth / 2 - (borderResizeHeight() / 2) + (borderResizeHeight() * 2), windowWidth - borderResizeHeight()), windowHeight - borderResizeHeight() * 2);
   eyeColor.mouseClicked(eyesMenu);
-  accessoires = createButton("Clothes");
-  accessoires.position(min(windowWidth / 2 - (borderResizeHeight() / 2) + (borderResizeHeight() * 2), windowWidth - borderResizeHeight()), windowHeight - borderResizeHeight() * 2);
-  accessoires.mouseClicked(clothesMenu);
 }
 
 function furMenu() {
@@ -852,7 +984,6 @@ function furMenu() {
   fur = true;
   furColor.remove();
   eyeColor.remove();
-  accessoires.remove();
 
   backFromClothes.remove();
   backFromClothes = createImg("clothes.png");
@@ -924,7 +1055,6 @@ function eyesMenu() {
   eyes = true;
   furColor.remove();
   eyeColor.remove();
-  accessoires.remove();
 
   backFromClothes.remove();
   backFromClothes = createImg("clothes.png");
@@ -1017,7 +1147,6 @@ function clothesMenu() {
   cloth = true;
   furColor.remove();
   eyeColor.remove();
-  accessoires.remove();
 
   backFromClothes.remove();
   backFromClothes = createImg("clothes.png");
@@ -1053,18 +1182,51 @@ function feed() {
 }
 
 function gameOver() {
+  dead_pet.remove();
+  setCookie("petname", "");
+  setCookie("hunger", 50);
+  setCookie("distance", 0);
+  setCookie("looks", "purpleGreen");
+  console.log(document.cookie);
+  petName = "";
+  hunger = 50;
+  score = 0;
+  purpleGreen = true;
+  purpleRed = false;
+  blueGreen = false;
+  blueRed = false;
   ohButton.remove();
   background(0);
   textSize(30);
   fill(255);
-  text("Game Over", windowWidth / 2 - 150, windowHeight / 2);
+  text("Game Over", windowWidth / 2 - (textWidth('Game Over') / 2), borderResizeHeight() * 2);
   restart = createButton("Restart");
-  restart.position(windowWidth / 2 - 150, windowHeight / 2 + 100);
+  restart.position(windowWidth / 2 - (textWidth("Restart") / 2), borderResizeHeight() * 4);
   res = true;
   restart.mouseClicked(egg);
 }
 
+function tutorial() {
+  newBackground();
+  fill(255);
+  textSize(30);
+  text('Congratulations', windowWidth / 2 - (textWidth('Congratulations') / 2), borderResizeHeight() * 2);
+  text('You will get your own Momo.', windowWidth / 2 - (textWidth('You will get your own Momo.') / 2), borderResizeHeight() * 2 + 50);
+  text('After you name it, you have to take care of it.', windowWidth / 2 - (textWidth('After you name it, you have to take care of it.') / 2), borderResizeHeight() * 2 + 100);
+  text('You have to feed your pet and go for a walk frequently.', windowWidth / 2 - (textWidth('You have to feed your pet and go for a walk frequently.') / 2), borderResizeHeight() * 2 + 150);
+  text('Lets Start!', windowWidth / 2 - (textWidth('Lets Start!') / 2), borderResizeHeight() * 2 + 350);
+  okay = createButton("Okay");
+  okay.position(windowWidth / 2 - (textWidth("Okay") / 2), borderResizeHeight() * 2 + 400);
+  okay.mouseClicked(egg);
+  finishTutorial = true;
+}
+
 function egg() {
+  if (finishTutorial == true) {
+    okay.remove();
+    finishTutorial = false;
+  }
+  firstTime = false;
   show_intro = true;
   if (answerNo == true) {
     displayAccept.remove();
@@ -1160,6 +1322,10 @@ function goingBack() {
   init_walk1 = false;
   init_walk2 = false;
   init_walk3 = false;
+  if (init_walkPet == true) {
+    walk_pet.remove();
+  }
+
   distance_button.remove();
   clearIntervalPos();
   if (end == true) {
